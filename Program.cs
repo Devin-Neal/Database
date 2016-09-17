@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -95,11 +95,6 @@ namespace SW_Arch_Project
                                         cart[reader["itemName"].ToString()] += input_quantity;
                                         //increase quantity of item in cart
                                         item_db_quantity = (Convert.ToInt32(reader["quantity"].ToString()) - input_quantity).ToString();
-                                        //if the item is out, remove it from cart
-                                        if (cart[reader["itemName"].ToString()] < 1)
-                                        {
-                                            cart.Remove(reader["itemName"].ToString());
-                                        }
                                         //make loop false since user entered correct value
                                         loop = false;
                                     }
@@ -497,7 +492,7 @@ namespace SW_Arch_Project
                 try
                 {
                     SQLiteCommand cmd = new SQLiteCommand();
-                    int i = 0;
+                    int i = 1;
 
                     con.Open();
                     cmd.Connection = con;
