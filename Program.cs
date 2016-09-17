@@ -141,10 +141,6 @@ namespace SW_Arch_Project
                                     cart.Remove(reader["itemName"].ToString());
                                 }
                             }
-                            //update database
-                            string sql2 = "UPDATE item SET quantity='" + item_db_quantity + "' WHERE  itemName='" + reader["itemName"] + "'";
-                            SQLiteCommand command2 = new SQLiteCommand(sql2, swad_db);
-                            command2.ExecuteNonQuery();
                         }
                     }
                 }
@@ -366,9 +362,10 @@ namespace SW_Arch_Project
                                 while (rdr.Read())
                                 {
                                     items.Add(rdr.GetString(1));
+                                    quantity.Add(rdr.GetInt32(2));
 
                                     Console.WriteLine(i + ". " + rdr.GetString(0) + " " + rdr.GetString(1) + " "
-                                    + rdr.GetInt16(2) + " " + rdr.GetFloat(3));
+                                    + rdr.GetInt32(2) + " " + rdr.GetFloat(3));
 
                                     i++;
                                 }
@@ -501,9 +498,13 @@ namespace SW_Arch_Project
                     {
                         int j = 0;
                         for (int i = 0; i < items.Count(); i++)
+                        {
+                            Console.WriteLine(items[i]);
+                            Console.WriteLine(entry.Key);
                             if (items[i] == entry.Key)
                                 j = i;
-
+                        }
+                        
                         cmd.Parameters.Add(new SQLiteParameter("@itemName", entry.Key));
                         cmd.Parameters.Add(new SQLiteParameter("@creditInfo", ccNum));
                         cmd.Parameters.Add(new SQLiteParameter("@address", address));
@@ -511,6 +512,14 @@ namespace SW_Arch_Project
                         cmd.Parameters.Add(new SQLiteParameter("@username", username));
 
                         cmd.ExecuteNonQuery();
+
+                        Console.WriteLine(j);
+                        Console.WriteLine(quantity[j]);
+
+                        //update database
+                        string sql2 = "UPDATE item SET quantity='" + (quantity[j] - entry.Value) + "' WHERE  itemName='" + entry.Key + "'";
+                        SQLiteCommand command2 = new SQLiteCommand(sql2, con);
+                        command2.ExecuteNonQuery();
                     }
                 }
                 catch (Exception ex)
