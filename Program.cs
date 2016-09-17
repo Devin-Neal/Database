@@ -492,7 +492,6 @@ namespace SW_Arch_Project
                 try
                 {
                     SQLiteCommand cmd = new SQLiteCommand();
-                    int i = 1;
 
                     con.Open();
                     cmd.Connection = con;
@@ -500,17 +499,18 @@ namespace SW_Arch_Project
 
                     foreach (KeyValuePair<string, int> entry in cart)
                     {
-                        double blah = entry.Value * price[i];
+                        int j = 0;
+                        for (int i = 0; i < items.Count(); i++)
+                            if (items[i] == entry.Key)
+                                j = i;
 
                         cmd.Parameters.Add(new SQLiteParameter("@itemName", entry.Key));
                         cmd.Parameters.Add(new SQLiteParameter("@creditInfo", ccNum));
                         cmd.Parameters.Add(new SQLiteParameter("@address", address));
-                        cmd.Parameters.Add(new SQLiteParameter("@price", (entry.Value * price[i]).ToString()));
+                        cmd.Parameters.Add(new SQLiteParameter("@price", (entry.Value * price[j]).ToString()));
                         cmd.Parameters.Add(new SQLiteParameter("@username", username));
 
                         cmd.ExecuteNonQuery();
-
-                        i++;
                     }
                 }
                 catch (Exception ex)
